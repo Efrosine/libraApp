@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/book_entity.dart';
-import 'package:myapp/book_grid_tile.dart';
+import 'package:myapp/entity/book_entity.dart';
+import 'package:myapp/presentation/component/book_grid_tile.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});

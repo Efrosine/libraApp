@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/book_entity.dart';
-import 'package:myapp/detail_book_page.dart';
+import 'package:myapp/entity/book_entity.dart';
+import 'package:myapp/presentation/page/detail_book_page.dart';
 
 class BookGridTile extends StatelessWidget {
   final BookEntity book;

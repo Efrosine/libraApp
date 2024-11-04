@@ -3,11 +3,11 @@ class BookEntity {
   final String title;
   final String author;
   final String publisher;
-  final int copyNumber;
+  final String copyNumber;
   final String fileSize;
-  final int readers;
-  final int reviews;
-  final int readTime;
+  final String readers;
+  final String reviews;
+  final String readTime;
 
   BookEntity({
     required this.imageUrl,
@@ -20,6 +20,21 @@ class BookEntity {
     required this.reviews,
     required this.readTime,
   });
+
+  factory BookEntity.fromJson(Map<String, dynamic> json) {
+    return BookEntity(
+     
+      imageUrl: json['imageUrl'],
+      title: json['title'],
+      author: json['author'],
+      publisher: json['publisher'],
+      copyNumber: json['copyNumber'],
+      fileSize: json['fileSize'],
+      readers: json['readers'],
+      reviews: json['reviews'],
+      readTime: json['readTime']
+    );
+  }
 }
 List<BookEntity> dummyBooks = [
   BookEntity(
@@ -27,11 +42,11 @@ List<BookEntity> dummyBooks = [
     title: 'Milk and honey',
     author: 'Rupi Kaur',
     publisher: 'Andrews McMeel Publishing',
-    copyNumber: 10,
+    copyNumber: '10',
     fileSize: '3.7 MB',
-    readers: 0,
-    reviews: 9,
-    readTime:25,
+    readers: '0',
+    reviews: '9',
+    readTime:'25',
     
   ),
   BookEntity(
@@ -39,33 +54,33 @@ List<BookEntity> dummyBooks = [
     title: 'Deer\'s',
     author: 'John Doe',
     publisher: 'Doe Publishing',
-    copyNumber: 5,
+    copyNumber: '5',
     fileSize: '2.5 MB',
-    readers: 10,
-    reviews: 10,
-    readTime:25,
+    readers: '10',
+    reviews: '10',
+    readTime:'25',
   ),
   BookEntity(
     imageUrl: 'https://via.placeholder.com/150',
     title: 'Tonya and her perfect tea',
     author: 'Alina Slyshik',
     publisher: 'Grasindo (Gramedia Widya Sarana Indonesia)',
-    copyNumber: 10,
+    copyNumber: '10',
     fileSize: '3.7 MB',
-    readers: 14,
-    reviews: 25,
-    readTime:25,
+    readers: '14',
+    reviews: '25',
+    readTime:'25',
   ),
   BookEntity(
     imageUrl: 'https://via.placeholder.com/150',
     title: 'Waves',
     author: 'Sarah Lee',
     publisher: 'Penguin Random House',
-    copyNumber: 20,
+    copyNumber: '20',
     fileSize: '5.0 MB',
-    readers: 30,
-    reviews: 43,
-    readTime:25,
+    readers: '30',
+    reviews: '43',
+    readTime:'25',
   ),
 ];
 

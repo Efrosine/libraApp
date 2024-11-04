@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/book_entity.dart';
+import 'package:myapp/entity/book_entity.dart';
 
 class DetailBookPage extends StatelessWidget {
   final BookEntity book;
