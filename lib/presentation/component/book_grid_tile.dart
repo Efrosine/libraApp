@@ -31,7 +31,7 @@ class BookGridTile extends StatelessWidget {
                 book.title,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              Text('${book.readers} Readers, ${book.reviews} Reviews'),
+              
               const Divider(height: 10, color: Colors.black),
               Row(
                 children: [

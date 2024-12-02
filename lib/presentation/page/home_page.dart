@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/entity/book_entity.dart';
 import 'package:myapp/presentation/component/book_grid_tile.dart';
-import 'package:myapp/service/service_book.dart';
- // Pastikan path sesuai dengan struktur folder Anda
+import 'package:myapp/service/api_service.dart';
+// Pastikan path sesuai dengan struktur folder Anda
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,13 +12,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final BookService _bookService = BookService();
-  late Future<List<BookEntity>> _books;
+  final ApiService apiService = ApiService();
+  late Future<List<BookEntity>> books;
 
   @override
   void initState() {
     super.initState();
-    _books = _bookService.fetchBooks();
+    books = apiService.getBooks();
   }
 
   @override
@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(title: const Text('ePustaka')),
       body: FutureBuilder<List<BookEntity>>(
-        future: _books,
+        future: books,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
