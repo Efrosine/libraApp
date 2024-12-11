@@ -28,7 +28,7 @@ class BookGridTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                book.title,
+                book.title??'',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               
@@ -45,7 +45,7 @@ class BookGridTile extends StatelessWidget {
           ),
         ),
         child: Image.network(
-          book.imageUrl,
+          book.imageUrl??'',
           fit: BoxFit.cover,
         ),
       ),

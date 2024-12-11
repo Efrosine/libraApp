@@ -30,7 +30,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
             children: [
               Center(
                 child: Image.network(
-                  widget.book.imageUrl,
+                  widget.book.imageUrl ?? '',
                   fit: BoxFit.cover,
                   height: 300,
                 ),
@@ -40,14 +40,14 @@ class _DetailBookPageState extends State<DetailBookPage> {
                 height: 50,
                 width: double.infinity,
                 child: isLoading
-                    ? Center(child: CircularProgressIndicator())
+                    ? const Center(child: CircularProgressIndicator())
                     : ElevatedButton.icon(
                         onPressed: () async {
                           setState(() {
                             isLoading = true;
                           });
-                          String msg =
-                              await apiservice.createLending(widget.book.id);
+                          String msg = await apiservice
+                              .requestLending(widget.book.id ?? 0);
                           setState(() {
                             isLoading = false;
                           });
@@ -64,7 +64,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
                       ),
               ),
               const SizedBox(height: 20),
-              Text(widget.book.title,
+              Text(widget.book.title ?? 'no Title',
                   style: Theme.of(context)
                       .textTheme
                       .titleLarge!
@@ -73,12 +73,12 @@ class _DetailBookPageState extends State<DetailBookPage> {
               Text('Publisher: ${widget.book.publisher}'),
               Text('Release Date: ${widget.book.releaseDate}'),
               Text('Read Time: ${widget.book.readTime}'),
-              Divider(),
+              const Divider(),
               Text(
                 'Overview',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
-              Text(widget.book.overview),
+              Text(widget.book.overview ?? 'no overview'),
               const SizedBox(height: 20),
             ],
           ),

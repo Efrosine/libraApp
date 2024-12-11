@@ -75,9 +75,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             color: Colors.grey[300],
                             borderRadius: BorderRadius.circular(8)),
                         child: Table(
-                          columnWidths: {
-                            0: const FixedColumnWidth(100),
-                            1: const FlexColumnWidth(),
+                          columnWidths: const {
+                            0: FixedColumnWidth(100),
+                            1: FlexColumnWidth(),
                           },
                           children: [
                             TableRow(children: [

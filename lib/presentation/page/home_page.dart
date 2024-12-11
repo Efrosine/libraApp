@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:myapp/entity/book_entity.dart';
 import 'package:myapp/presentation/component/book_grid_tile.dart';
@@ -8,23 +10,38 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   final ApiService apiService = ApiService();
   late Future<List<BookEntity>> books;
+  String role = 'user';
 
   @override
   void initState() {
-    super.initState();
     books = apiService.getBooks();
+    getRole();
+    super.initState();
+  }
+
+  Future<void> getRole() async {
+    role = await apiService.getRole() ?? 'user';
+    setState(() {});
+    bool temp = role == 'admin';
+    log(temp.toString(), name: 'value dari temp');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('ePustaka')),
+      floatingActionButton: role == 'admin'
+          ? FloatingActionButton(
+              onPressed: () {},
+              child: const Icon(Icons.add),
+            )
+          : null,
       body: FutureBuilder<List<BookEntity>>(
         future: books,
         builder: (context, snapshot) {

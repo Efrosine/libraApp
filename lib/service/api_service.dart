@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
+import 'package:myapp/entity/lending_entity.dart';
 import 'package:myapp/entity/user_entity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myapp/entity/book_entity.dart';
@@ -13,6 +14,12 @@ class ApiService {
     headers: {'Accept': 'application/json'},
   ));
   final SharedPreferencesAsync pref = SharedPreferencesAsync();
+
+  Future<String?> getRole() async {
+    var data = await pref.getString('role');
+    log(data ?? 'nullll', name: 'inirole getrole');
+    return data;
+  }
 
   Future<List<BookEntity>> getBooks() async {
     try {
@@ -42,17 +49,33 @@ class ApiService {
       return Future.error(Exception(
           'Failed to load user :$token | ${e.response?.data['message']}'));
     } catch (e) {
-      return Future.error(Exception('Something whent wrong'));
+      return Future.error(Exception('Something whent wrong ${e.toString()}'));
     }
   }
 
-  Future<String> createLending(int bookId) async {
+  Future<Map<String, dynamic>> getIdBookUser() async {
+    try {
+      String? token = await pref.getString('token');
+      final response = await _dio.get(
+        '/lendings/getBookUserId',
+        options: Options(headers: {'authorization': 'Bearer ${token!}'}),
+      );
+      return response.data['data'];
+    } on DioException catch (e) {
+      return Future.error(
+          Exception('Failed to load user  ${e.response?.data['message']}'));
+    } catch (e) {
+      return Future.error(Exception('Something whent wrong ${e.toString()}'));
+    }
+  }
+
+  Future<String> requestLending(int bookId) async {
     try {
       int? id = await pref.getInt('id');
       String? token = await pref.getString('token');
       final response = await _dio.post('/users/requestLend',
           options: Options(headers: {
-            'FAccept': 'application/json',
+            'Accept': 'application/json',
             'authorization': 'Bearer ${token!}',
           }),
           data: {
@@ -64,13 +87,89 @@ class ApiService {
       return response.data['message'] ?? 'message null';
     } on DioException catch (e) {
       return Future.error(Exception(
-          'Failed to create lending : ${e.response?.data['message']}'));
+          'Failed to request lending : ${e.response?.data['message']}'));
     } catch (e) {
-      return Future.error(Exception('Something whent wrong'));
+      return Future.error(Exception('Something whent wrong :${e.toString()}'));
     }
   }
 
-  
+  Future<String> createLending(LendingEntity lending) async {
+    try {
+      String? token = await pref.getString('token');
+      var data = lending.toJson();
+      print('ini datanya $data');
+      final response = await _dio.post('/lendings',
+          options: Options(headers: {
+            'Accept': 'application/json',
+            'authorization': 'Bearer ${token!}',
+          }),
+          data: lending.toJson());
+      return response.data['message'] ?? 'message null';
+    } on DioException catch (e) {
+      return Future.error(Exception(
+          'Failed to create lending : ${e.response?.data['message']}'));
+    } catch (e) {
+      return Future.error(Exception('Something whent wrong :${e.toString()}'));
+    }
+  }
+
+  Future<String> updateLending(LendingEntity lending) async {
+    try {
+      String? token = await pref.getString('token');
+      final response = await _dio.put('/lendings/${lending.id}',
+          options: Options(headers: {
+            'Accept': 'application/json',
+            'authorization': 'Bearer ${token!}',
+          }),
+          data: lending.toJson());
+      return response.data['message'] ?? 'message null';
+    } on DioException catch (e) {
+      return Future.error(Exception(
+          'Failed to create lending : ${e.response?.data['message']}'));
+    } catch (e) {
+      return Future.error(Exception('Something whent wrong :${e.toString()}'));
+    }
+  }
+
+  Future<String> deleteLending(int userId) async {
+    try {
+      String? token = await pref.getString('token');
+      final response = await _dio.delete(
+        '/lendings/$userId',
+        options: Options(headers: {
+          'Accept': 'application/json',
+          'authorization': 'Bearer ${token!}',
+        }),
+      );
+      return response.data['message'] ?? 'message null';
+    } on DioException catch (e) {
+      return Future.error(Exception(
+          'Failed to create lending : ${e.response?.data['message']}'));
+    } catch (e) {
+      return Future.error(Exception('Something whent wrong :${e.toString()}'));
+    }
+  }
+
+  Future<List<LendingEntity>> getUserLending() async {
+    try {
+      int? id = await pref.getInt('id');
+      String? token = await pref.getString('token');
+      final response = await _dio.get(
+        '/users/$id/lendings',
+        options: Options(headers: {
+          'Accept': 'application/json',
+          'authorization': 'Bearer ${token!}',
+        }),
+      );
+      List<dynamic> data = response.data['data'] as List<dynamic>;
+      return data.map((json) => LendingEntity.fromJson(json)).toList();
+    } on DioException catch (e) {
+      return Future.error(
+          Exception('Failed to load lending : ${e.response?.data['message']}'));
+    } catch (e) {
+      return Future.error(Exception('Something whent wrong: ${e.toString()}'));
+    }
+  }
 
   Future<String> login(String email, String pw) async {
     if (email.isEmpty && pw.isEmpty) {
@@ -84,9 +183,10 @@ class ApiService {
       String token = response.data['data']['token'];
       int id = response.data['data']['id'];
       String role = response.data['data']['role'];
-      pref.setString('token', token);
-      pref.setInt('id', id);
-      pref.setString('role', role);
+      await pref.setString('token', token);
+      await pref.setInt('id', id);
+      await pref.setString('role', role);
+      log(role, name: 'inirole setelah login');
       return response.data['message'] ?? 'message null';
     } on DioException catch (e) {
       return Future.error(

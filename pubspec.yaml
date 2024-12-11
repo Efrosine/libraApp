@@ -39,6 +39,8 @@ dependencies:
   dio: ^5.7.0
   shared_preferences: ^2.3.3
   intl: ^0.20.1
+  file_picker: ^8.1.4
+  board_datetime_picker: ^2.1.6
 
 dev_dependencies:
   flutter_test:
